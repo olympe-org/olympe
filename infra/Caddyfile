@@ -17,7 +17,7 @@ reverse_proxy olympe-orphee:8000 # Forward to the 'orphee' container's port 8000
 # Redirections
 
 artemis-code.olympe.center {
-redir https://github.com/anthony-rgs/artemis permanent
+redir https://github.com/olympe-org/artemis permanent
 }
 
 elysium.olympe.center {
@@ -25,7 +25,7 @@ redir https://spotify-billions.club/ permanent
 }
 
 elysium-code.olympe.center {
-redir https://github.com/anthony-rgs/elysium permanent
+redir https://github.com/olympe-org/elysium permanent
 }
 
 hephaistos.olympe.center {
@@ -33,7 +33,7 @@ redir https://vexia.studio/ permanent
 }
 
 hephaistos-code.olympe.center {
-redir https://github.com/anthony-rgs/hephaistos permanent
+redir https://github.com/olympe-org/hephaistos permanent
 }
 
 ambrosia.olympe.center {
@@ -41,9 +41,9 @@ redir https://chromewebstore.google.com/detail/ambrosia/jpabbbaemgkidilifjlfdnpn
 }
 
 ambrosia-code.olympe.center {
-redir https://github.com/anthony-rgs/ambrosia permanent
+redir https://github.com/olympe-org/ambrosia permanent
 }
 
 olympe-code.olympe.center {
-redir https://github.com/anthony-rgs/olympe permanent
+redir https://github.com/olympe-org/olympe permanent
 }
