@@ -1113,6 +1113,7 @@ async def render_video(job_id: str, user_id: str, payload: dict) -> None:
     "-c:a", "aac",
     "-b:a", "192k",
     "-max_muxing_queue_size", "9999",
+    "-movflags", "+faststart",
     "-t", str(total_duration),
     out_path,
   ])

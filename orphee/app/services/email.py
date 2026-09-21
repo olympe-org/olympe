@@ -30,6 +30,18 @@ def create_download_token(job_id: str) -> str:
   )
 
 
+def build_share_link(job_id: str) -> tuple[str, datetime]:
+  """Génère un lien de partage/lecture pour ce job (valable _DL_TOKEN_HOURS).
+
+  Utilisé à la fois par l'email "vidéo prête" et par l'endpoint de partage —
+  même mécanisme, même durée, pour que les deux restent cohérents.
+  """
+  expire = datetime.now(timezone.utc) + timedelta(hours=_DL_TOKEN_HOURS)
+  token = create_download_token(job_id)
+  url = f"{API_URL}/jobs/{job_id}/download?token={token}"
+  return url, expire
+
+
 def verify_download_token(token: str) -> str | None:
   try:
     payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
@@ -63,8 +75,7 @@ async def send_video_ready(user_id: str, job_id: str, job_title: str, duration: 
   if not email:
     return
 
-  token = create_download_token(job_id)
-  download_url = f"{API_URL}/jobs/{job_id}/download?token={token}"
+  download_url, _ = build_share_link(job_id)
   html = _load_template("video_ready.html",
     job_title=job_title,
     duration=_fmt_duration(duration),

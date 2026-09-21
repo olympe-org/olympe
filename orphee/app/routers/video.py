@@ -22,7 +22,7 @@ from ..job_store import (
   final_path, get_active_job_for_user, get_job, purge_job, update_job,
 )
 from ..services import ffmpeg
-from ..services.email import send_video_failed, send_video_ready, verify_download_token
+from ..services.email import build_share_link, send_video_failed, send_video_ready, verify_download_token
 
 router = APIRouter()
 
@@ -209,11 +209,17 @@ async def download_job(
   credentials: Optional[HTTPAuthorizationCredentials] = Depends(HTTPBearer(auto_error=False)),
   conn = Depends(get_db),
 ):
-  """Télécharge le final.mp4 d'un job terminé (auth JWT ou token de téléchargement)."""
+  """Sert le final.mp4 d'un job terminé (auth JWT ou token de partage/lecture).
+
+  Accès par token (aperçu in-app ou lien de partage) : lecture inline (streaming).
+  Accès par JWT (bouton "Télécharger" explicite) : téléchargement forcé.
+  """
+  disposition = "attachment"
   if token:
     verified_job_id = verify_download_token(token)
     if not verified_job_id or verified_job_id != job_id:
       raise HTTPException(status_code=403, detail="Token de téléchargement invalide ou expiré.")
+    disposition = "inline"
   elif credentials:
     user = await require_auth(credentials, conn)
     job = get_job(job_id) or await db_get_job(job_id)
@@ -240,8 +246,27 @@ async def download_job(
     path,
     media_type="video/mp4",
     filename=filename,
-    headers={"Content-Disposition": f"attachment; filename=\"{filename}\""},
+    headers={"Content-Disposition": f"{disposition}; filename=\"{filename}\""},
   )
+
+
+@router.get("/{job_id}/share-link")
+async def get_share_link(job_id: str, user: dict = Depends(require_auth)):
+  """Génère un lien de lecture/partage à la demande (valable 48h).
+
+  Utilisé en silence par l'aperçu in-app (pour obtenir une URL utilisable
+  dans une balise <video>) et explicitement par le bouton "Partager"/QR code.
+  """
+  job = get_job(job_id) or await db_get_job(job_id)
+  if not job:
+    raise HTTPException(status_code=404, detail="Job introuvable.")
+  if str(job["user_id"]) != str(user["id"]) and not user["is_admin"]:
+    raise HTTPException(status_code=403, detail="Accès refusé.")
+  if job["status"] != DONE:
+    raise HTTPException(status_code=409, detail=f"La vidéo n'est pas encore prête (statut : {job['status']}).")
+
+  url, expires_at = build_share_link(job_id)
+  return {"url": url, "expires_at": expires_at.isoformat()}
 
 
 @router.delete("/{job_id}")
