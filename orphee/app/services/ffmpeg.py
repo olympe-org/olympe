@@ -1,5 +1,6 @@
 import asyncio
 import os
+import time
 
 from ..job_store import (
   register_process, unregister_process, update_job,
@@ -84,8 +85,9 @@ EXPANDED_FG_H   = OUT_H - EXPANDED_TOP - EXPANDED_BOTTOM  # 1620
 
 # ── Primitives ────────────────────────────────────────────────────────────────
 
-async def _run(job_id: str, *args: str) -> None:
+async def _run(job_id: str, *args: str, label: str = "ffmpeg") -> None:
   """Lance une commande ffmpeg et lève une erreur si elle échoue."""
+  start = time.monotonic()
   process = await asyncio.create_subprocess_exec(
     "ffmpeg", "-y", *args,
     stdout=asyncio.subprocess.PIPE,
@@ -94,6 +96,7 @@ async def _run(job_id: str, *args: str) -> None:
   register_process(job_id, process)
   _, stderr = await process.communicate()
   unregister_process(job_id)
+  print(f"[ffmpeg][{job_id}] {label} terminé en {time.monotonic() - start:.2f}s (code={process.returncode})")
 
   if process.returncode != 0:
     lines = stderr.decode().strip().splitlines() if stderr else []
@@ -121,6 +124,7 @@ async def extract_clip(job_id: str, source: str, start_time: str, duration: int,
     "-c:a", "aac",
     "-avoid_negative_ts", "make_zero",
     output_path,
+    label="extract_clip",
   )
   return output_path
 
@@ -1108,5 +1112,5 @@ async def render_video(job_id: str, user_id: str, payload: dict) -> None:
     out_path,
   ])
 
-  await _run(job_id, *cmd)
+  await _run(job_id, *cmd, label="render_final")
   cleanup_job_artifacts(user_id, job_id)
