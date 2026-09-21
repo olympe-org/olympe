@@ -82,12 +82,21 @@ services:
     #   - "8000:8000" # Swagger: http://localhost:8000/docs // only for local
     restart: unless-stopped
 
+  privoxy: # -> Pont HTTP -> SOCKS5 pour que ffmpeg passe par le proxy résidentiel (Raspberry Pi)
+    build: ./privoxy
+    container_name: olympe-privoxy
+    environment:
+      YTDLP_PROXY: ${YTDLP_PROXY:-}
+    restart: unless-stopped
+
   orphee: # -> Orphée — génération automatique de vidéos musicales
     build: ./orphee
     container_name: olympe-orphee
     depends_on:
       athena:
         condition: service_healthy
+      privoxy:
+        condition: service_started
     env_file: .env
     environment:
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
@@ -97,6 +106,7 @@ services:
       CORS_ORIGINS: ${CORS_ORIGINS}
       STORAGE_ROOT: /storage/jobs
       YTDLP_PROXY: ${YTDLP_PROXY:-}
+      FFMPEG_HTTP_PROXY: http://privoxy:8118
       RESEND_API_KEY: ${RESEND_API_KEY:-}
       RESEND_FROM: ${RESEND_FROM:-notifications@vexia.studio}
       APP_URL: ${APP_URL:-https://vexia.studio}

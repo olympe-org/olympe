@@ -77,6 +77,13 @@ async def download(job_id: str, url: str, output_dir: str,
   if proxy:
     base_cmd += ["--proxy", proxy]
 
+  ffmpeg_proxy = os.getenv("FFMPEG_HTTP_PROXY", "")
+  if ffmpeg_proxy:
+    # ffmpeg (utilisé en downloader externe pour les coupes --download-sections
+    # sur des formats non-HLS) ne sait pas parler SOCKS5 : on le fait passer par
+    # privoxy, qui relaie vers le même proxy résidentiel.
+    base_cmd += ["--downloader-args", f"ffmpeg_i:-http_proxy {ffmpeg_proxy}"]
+
   sections_args = []
   if start_time is not None and duration is not None:
     start_s = _parse_seconds(start_time)
