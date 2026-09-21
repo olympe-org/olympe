@@ -1,6 +1,7 @@
 import asyncio
 import json
 import os
+import time
 
 from ..job_store import register_process, unregister_process, update_job, DOWNLOADING
 
@@ -30,15 +31,25 @@ def _fmt_time(seconds: float) -> str:
 
 
 async def _run_ytdlp(cmd: list[str], job_id: str) -> tuple[int, bytes]:
+  """Lance yt-dlp et logge chaque ligne avec le temps écoulé, pour repérer les phases lentes."""
   process = await asyncio.create_subprocess_exec(
     *cmd,
     stdout=asyncio.subprocess.PIPE,
-    stderr=asyncio.subprocess.PIPE,
+    stderr=asyncio.subprocess.STDOUT,
   )
   register_process(job_id, process)
-  _, stderr = await process.communicate()
+
+  start = time.monotonic()
+  lines = []
+  async for raw_line in process.stdout:
+    line = raw_line.decode(errors="replace").rstrip()
+    print(f"[yt-dlp][{job_id}][{time.monotonic() - start:6.2f}s] {line}")
+    lines.append(line)
+
+  returncode = await process.wait()
   unregister_process(job_id)
-  return process.returncode, stderr
+  print(f"[yt-dlp][{job_id}] terminé en {time.monotonic() - start:.2f}s (code={returncode})")
+  return returncode, "\n".join(lines).encode()
 
 
 async def download(job_id: str, url: str, output_dir: str,
@@ -51,6 +62,7 @@ async def download(job_id: str, url: str, output_dir: str,
 
   base_cmd = [
     "yt-dlp",
+    "-v",
     "--no-playlist",
     "--format", _FORMAT,
     "--merge-output-format", "mp4",
@@ -76,17 +88,17 @@ async def download(job_id: str, url: str, output_dir: str,
       os.remove(os.path.join(output_dir, f))
 
   sections_used = False
-  returncode, stderr = await _run_ytdlp(base_cmd + sections_args + [url], job_id)
+  returncode, output = await _run_ytdlp(base_cmd + sections_args + [url], job_id)
 
   if returncode == 0 and sections_args:
     sections_used = True
   elif returncode != 0 and sections_args:
     print("[yt-dlp] --download-sections a échoué, retry sans sections")
     _clear_dir()
-    returncode, stderr = await _run_ytdlp(base_cmd + [url], job_id)
+    returncode, output = await _run_ytdlp(base_cmd + [url], job_id)
 
   if returncode != 0:
-    error = stderr.decode().strip().splitlines()[-1] if stderr else "Erreur inconnue"
+    error = output.decode().strip().splitlines()[-1] if output else "Erreur inconnue"
     raise RuntimeError(f"yt-dlp a échoué : {error}")
 
   files = [f for f in os.listdir(output_dir) if f.endswith(".mp4")]
