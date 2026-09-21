@@ -21,7 +21,7 @@ from ..job_store import (
   CANCELLED, DONE, FAILED,
   cancel_job, create_job, db_cleanup_max_jobs, db_delete_job, db_get_job, db_insert_job,
   db_increment_metrics, db_increment_user_metrics, db_update_job_status,
-  final_path, get_active_job_for_user, get_job, purge_job, update_job,
+  final_path, get_active_job_for_user, get_job, purge_job, update_job, was_cancelled,
 )
 from ..services import ffmpeg
 from ..services.email import (
@@ -376,7 +376,7 @@ async def _run_render_pipeline(
     await db_increment_metrics(duration_seconds=duration, clips_used=len(clips))
     await db_increment_user_metrics(user_id, duration_seconds=duration, clips_used=len(clips))
     await db_cleanup_max_jobs(user_id, max_jobs)
-    job = get_job(job_id)
+    job = get_job(job_id) or await db_get_job(job_id)
     await send_video_ready(
       user_id, job_id, job["title"] if job else job_id, duration,
       file_size=file_size, clip_count=len(clips), template=payload.get("template", ""),
@@ -384,10 +384,17 @@ async def _run_render_pipeline(
   except asyncio.CancelledError:
     pass
   except Exception as e:
+    if was_cancelled(job_id):
+      # Le process a été tué volontairement (cancel_job) : ce n'est pas un
+      # vrai échec, ne pas écraser le statut CANCELLED ni notifier d'erreur.
+      job_dir = os.path.join(STORAGE_ROOT, user_id, job_id)
+      if os.path.isdir(job_dir):
+        shutil.rmtree(job_dir, ignore_errors=True)
+      return
     print(f"[pipeline] job={job_id} FAILED: {e}")
     update_job(job_id, status=FAILED, error=str(e), message=f"Erreur : {e}")
     await db_update_job_status(job_id, FAILED, error=str(e))
-    job = get_job(job_id)
+    job = get_job(job_id) or await db_get_job(job_id)
     clip_count = len(payload.get("data", []))
     await send_video_failed(
       user_id, job_id, job["title"] if job else job_id, str(e),

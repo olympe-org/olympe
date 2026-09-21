@@ -24,6 +24,11 @@ _jobs: dict[str, dict] = {}
 # Processus actifs : job_id -> asyncio.subprocess.Process
 _processes: dict[str, asyncio.subprocess.Process] = {}
 
+# Jobs annulés volontairement (survit à purge_job, contrairement à _jobs) —
+# permet à la pipeline de fond de distinguer une annulation d'un vrai échec
+# quand le sous-processus tué remonte une erreur après coup.
+_cancelled_ids: set[str] = set()
+
 
 def _job_dir(user_id: str, job_id: str) -> str:
   return os.path.join(STORAGE_ROOT, user_id, job_id)
@@ -112,6 +117,8 @@ def cancel_job(job_id: str) -> bool:
   if not job or job["status"] in (DONE, FAILED, CANCELLED):
     return False
 
+  _cancelled_ids.add(job_id)
+
   process = _processes.get(job_id)
   if process:
     try:
@@ -122,6 +129,14 @@ def cancel_job(job_id: str) -> bool:
 
   update_job(job_id, status=CANCELLED)
   return True
+
+
+def was_cancelled(job_id: str) -> bool:
+  """Consomme le marqueur d'annulation — True une seule fois par job annulé."""
+  if job_id in _cancelled_ids:
+    _cancelled_ids.discard(job_id)
+    return True
+  return False
 
 
 # ── Helpers DB appelés depuis les background tasks ────────────────────────────
