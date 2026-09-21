@@ -24,7 +24,9 @@ from ..job_store import (
   final_path, get_active_job_for_user, get_job, purge_job, update_job,
 )
 from ..services import ffmpeg
-from ..services.email import build_share_link, send_video_failed, send_video_ready, verify_download_token
+from ..services.email import (
+  build_share_link, send_video_cancelled, send_video_failed, send_video_ready, verify_download_token,
+)
 
 router = APIRouter()
 
@@ -339,8 +341,11 @@ async def delete_job(job_id: str, user: dict = Depends(require_auth)):
     raise HTTPException(status_code=403, detail="Accès refusé.")
 
   if mem_job:
+    is_admin_action = user["is_admin"] and str(db_job["user_id"]) != str(user["id"])
     cancel_job(job_id)
     purge_job(job_id)
+    if is_admin_action:
+      await send_video_cancelled(str(db_job["user_id"]), job_id, db_job.get("title") or job_id)
   else:
     job_dir = os.path.join(STORAGE_ROOT, str(db_job["user_id"]), job_id)
     if os.path.isdir(job_dir):

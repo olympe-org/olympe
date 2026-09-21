@@ -70,6 +70,18 @@ def _fmt_duration(seconds: int) -> str:
   return f"{m}m {s:02d}s" if s else f"{m}m"
 
 
+def _fmt_size(size_bytes: int | None) -> str:
+  if not size_bytes:
+    return ""
+  if size_bytes < 1024:
+    return f"{size_bytes} o"
+  if size_bytes < 1024 ** 2:
+    return f"{size_bytes / 1024:.1f} Ko"
+  if size_bytes < 1024 ** 3:
+    return f"{size_bytes / 1024 ** 2:.1f} Mo"
+  return f"{size_bytes / 1024 ** 3:.2f} Go"
+
+
 async def send_video_ready(
   user_id: str, job_id: str, job_title: str, duration: int,
   file_size: int | None = None, clip_count: int = 0, template: str = "",
@@ -88,7 +100,7 @@ async def send_video_ready(
     download_url=download_url,
     app_url=APP_URL,
     job_id=job_id,
-    file_size=file_size if file_size is not None else "",
+    file_size=_fmt_size(file_size),
     clip_count=clip_count,
     template=template,
   )
@@ -99,7 +111,7 @@ async def send_video_ready(
     {
       "from": RESEND_FROM,
       "to": [email],
-      "subject": f"✅ Votre vidéo est prête — {job_title}",
+      "subject": f"🎬 Ta vidéo « {job_title} » est prête",
       "html": html,
     },
   )
@@ -132,7 +144,34 @@ async def send_video_failed(
     {
       "from": RESEND_FROM,
       "to": [email],
-      "subject": f"❌ Erreur de rendu — {job_title}",
+      "subject": f"⚠️ Le rendu de « {job_title} » a échoué",
+      "html": html,
+    },
+  )
+
+
+async def send_video_cancelled(user_id: str, job_id: str, job_title: str) -> None:
+  """Notifie le propriétaire du job quand un admin annule son rendu à sa place."""
+  if not RESEND_API_KEY:
+    return
+
+  email = await _get_user_email(user_id)
+  if not email:
+    return
+
+  html = _load_template("video_cancelled.html",
+    job_title=job_title,
+    app_url=APP_URL,
+    job_id=job_id,
+  )
+
+  resend.api_key = RESEND_API_KEY
+  await asyncio.to_thread(
+    resend.Emails.send,
+    {
+      "from": RESEND_FROM,
+      "to": [email],
+      "subject": f"🛑 Le rendu de « {job_title} » a été annulé",
       "html": html,
     },
   )
