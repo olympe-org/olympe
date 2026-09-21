@@ -397,11 +397,16 @@ def build_filter_complex(
     else:
       s1, s2 = _next_lbl(), _next_lbl()
       parts.append(f"[{i}:v]split=2[{s1}][{s2}]")
+      # Flou calculé sur une image réduite (16x moins de pixels) puis remise à
+      # l'échelle : un flou détruit déjà le détail fin, donc le résultat visuel
+      # est quasi identique à un flou en pleine résolution, pour une fraction
+      # du coût CPU (le vrai goulot d'étranglement du rendu final).
       parts.append(
         f"[{s1}]"
-        f"scale={OUT_W}:{OUT_H}:force_original_aspect_ratio=increase,"
-        f"crop={OUT_W}:{OUT_H},setsar=1,"
-        f"boxblur=15:2,"
+        f"scale={OUT_W // 4}:{OUT_H // 4}:force_original_aspect_ratio=increase,"
+        f"crop={OUT_W // 4}:{OUT_H // 4},setsar=1,"
+        f"boxblur=6:2,"
+        f"scale={OUT_W}:{OUT_H},"
         f"colorchannelmixer=rr={BG_BRIGHTNESS}:gg={BG_BRIGHTNESS}:bb={BG_BRIGHTNESS},"
         f"format=yuv420p"
         f"[{bg_lbl}]"
@@ -1103,8 +1108,8 @@ async def render_video(job_id: str, user_id: str, payload: dict) -> None:
     "-map", "[vout]",
     "-map", "[ca]",
     "-c:v", "libx264",
-    "-preset", "veryfast",
-    "-crf", "17",
+    "-preset", "fast",
+    "-crf", "18",
     "-c:a", "aac",
     "-b:a", "192k",
     "-max_muxing_queue_size", "9999",
