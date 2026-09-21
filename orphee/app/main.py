@@ -19,6 +19,7 @@ if origins:
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Job-Title", "Content-Disposition"],
   )
 
 @app.get("/health")

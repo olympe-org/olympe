@@ -2,6 +2,7 @@ import asyncio
 import json
 import os
 import re
+import urllib.parse
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from typing import AsyncGenerator, Optional
@@ -268,6 +269,9 @@ async def download_job(
   filename = f"{job['title']}_{job_id[:8]}.mp4"
   content_disposition = f"{disposition}; filename=\"{filename}\""
   file_size = os.path.getsize(path)
+  # Titre encodé (accents/emojis invalides tels quels dans un header HTTP) —
+  # décoder avec decodeURIComponent() côté front.
+  job_title_header = urllib.parse.quote(job["title"])
 
   range_header = request.headers.get("range")
   if range_header:
@@ -289,6 +293,7 @@ async def download_job(
         "Accept-Ranges": "bytes",
         "Content-Length": str(end - start + 1),
         "Content-Disposition": content_disposition,
+        "X-Job-Title": job_title_header,
       },
     )
 
@@ -296,7 +301,11 @@ async def download_job(
     path,
     media_type="video/mp4",
     filename=filename,
-    headers={"Content-Disposition": content_disposition, "Accept-Ranges": "bytes"},
+    headers={
+      "Content-Disposition": content_disposition,
+      "Accept-Ranges": "bytes",
+      "X-Job-Title": job_title_header,
+    },
   )
 
 
