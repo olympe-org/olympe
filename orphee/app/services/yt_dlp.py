@@ -1,10 +1,12 @@
 import asyncio
+import json
 import os
 
 from ..job_store import register_process, unregister_process, update_job, DOWNLOADING
 
 _FORMAT = (
-  "bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]"
+  "best[protocol*=m3u8][height<=720]"
+  "/bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]"
   "/bestvideo[height<=720]+bestaudio"
   "/best[height<=720][ext=mp4]"
   "/best[height<=720]"
@@ -90,3 +92,45 @@ async def download(job_id: str, url: str, output_dir: str,
     raise RuntimeError("yt-dlp n'a produit aucun fichier mp4.")
 
   return os.path.join(output_dir, files[0]), sections_used
+
+
+async def search(query: str, limit: int = 10) -> list[dict]:
+  """Cherche des vidéos YouTube via yt-dlp (pas de téléchargement)."""
+  cmd = [
+    "yt-dlp",
+    f"ytsearch{limit}:{query}",
+    "--flat-playlist",
+    "--dump-json",
+    "--no-warnings",
+  ]
+
+  proxy = os.getenv("YTDLP_PROXY", "")
+  if proxy:
+    cmd += ["--proxy", proxy]
+
+  process = await asyncio.create_subprocess_exec(
+    *cmd,
+    stdout=asyncio.subprocess.PIPE,
+    stderr=asyncio.subprocess.PIPE,
+  )
+  stdout, stderr = await process.communicate()
+
+  if process.returncode != 0:
+    error = stderr.decode().strip().splitlines()[-1] if stderr else "Erreur inconnue"
+    raise RuntimeError(f"yt-dlp search a échoué : {error}")
+
+  results = []
+  for line in stdout.decode().strip().splitlines():
+    if not line:
+      continue
+    entry = json.loads(line)
+    results.append({
+      "id": entry.get("id"),
+      "title": entry.get("title"),
+      "url": entry.get("url") or f"https://www.youtube.com/watch?v={entry.get('id')}",
+      "duration": entry.get("duration"),
+      "thumbnail": entry.get("thumbnails", [{}])[-1].get("url") if entry.get("thumbnails") else None,
+      "channel": entry.get("channel") or entry.get("uploader"),
+    })
+
+  return results

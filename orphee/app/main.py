@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from psycopg.rows import dict_row
 
 from .config import DATABASE_URL
-from .routers import admin, auth, video
+from .routers import admin, auth, video, youtube
 
 # Orphée — API de génération automatique de vidéos musicales
 app = FastAPI(title="Orphée API", version="0.1.0")
@@ -39,3 +39,4 @@ async def metrics():
 app.include_router(auth.router,  prefix="/auth",  tags=["auth"])
 app.include_router(admin.router, prefix="/admin", tags=["admin"])
 app.include_router(video.router, prefix="/jobs",  tags=["jobs"])
+app.include_router(youtube.router, prefix="/youtube", tags=["youtube"])
