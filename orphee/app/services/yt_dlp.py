@@ -56,6 +56,8 @@ async def download(job_id: str, url: str, output_dir: str,
     "--merge-output-format", "mp4",
     "--retries", "5",
     "--fragment-retries", "5",
+    "--concurrent-fragments", "4",
+    "--force-ipv4",
     "--output", output_template,
   ]
 
