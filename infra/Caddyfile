@@ -10,7 +10,16 @@ reverse_proxy olympe-hermes:8000 # Forward to the 'hermes' container's port 8000
 # Orphée — API de génération de vidéos musicales
 
 orphee.olympe.center {
-encode zstd gzip # Enable compression
+encode {
+	# Pas de compression sur les téléchargements vidéo : le MP4 est déjà
+	# compressé (aucun gain), et compression + Range HTTP sont incompatibles
+	# (casse le streaming/seek dans le lecteur vidéo).
+	match {
+		not path /jobs/*/download
+	}
+	zstd
+	gzip
+}
 reverse_proxy olympe-orphee:8000 # Forward to the 'orphee' container's port 8000
 }
 
