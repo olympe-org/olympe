@@ -1,4 +1,5 @@
 import asyncio
+import html
 import os
 from datetime import datetime, timedelta, timezone
 
@@ -15,10 +16,10 @@ _TMPL_DIR = os.path.join(os.path.dirname(__file__), "templates")
 
 def _load_template(name: str, **kwargs) -> str:
   with open(os.path.join(_TMPL_DIR, name), encoding="utf-8") as f:
-    html = f.read()
+    out = f.read()
   for key, value in kwargs.items():
-    html = html.replace(f"{{{{{key}}}}}", str(value))
-  return html
+    out = out.replace(f"{{{{{key}}}}}", html.escape(str(value)))
+  return out
 
 
 def create_download_token(job_id: str) -> str:

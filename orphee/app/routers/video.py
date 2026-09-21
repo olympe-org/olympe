@@ -1,6 +1,7 @@
 import asyncio
 import json
 import os
+import re
 from datetime import datetime
 from zoneinfo import ZoneInfo
 from typing import AsyncGenerator, Optional
@@ -91,6 +92,7 @@ class HighlightActive(BaseModel):
 
 class RenderRequest(BaseModel):
   title: VideoTitle
+  job_name: Optional[str] = None
   template: str = "top"
   highlightActive: Optional[HighlightActive] = None
   teaserTop: bool = False
@@ -137,8 +139,14 @@ async def create_render_job(
       },
     )
 
-  now = datetime.now(ZoneInfo("Europe/Paris"))
-  slug = f"{body.template}-{user['username']}-{now.strftime('%Y-%m-%d-%Hh%M')}"
+  custom_name = (body.job_name or "").strip()
+  if custom_name:
+    # Retire les caractères qui casseraient un nom de fichier / header HTTP
+    # (le titre finit dans le nom du fichier téléchargé et dans les emails).
+    slug = re.sub(r'[\r\n"/\\]', "", custom_name)[:100]
+  else:
+    now = datetime.now(ZoneInfo("Europe/Paris"))
+    slug = f"{body.template}-{user['username']}-{now.strftime('%Y-%m-%d-%Hh%M')}"
 
   job = create_job(user_id=user_id, title=slug)
   await db_insert_job(job["job_id"], user_id, slug)
