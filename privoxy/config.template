@@ -1,8 +1,2 @@
 listen-address  0.0.0.0:8118
 forward-socks5  /  __UPSTREAM__  .
-
-# Réutilise la connexion déjà établie vers le proxy résidentiel au lieu de
-# rouvrir un tunnel SOCKS5 (via Tailscale) à chaque requête HTTP de ffmpeg.
-connection-sharing 1
-keep-alive-timeout 300
-socket-timeout 300
