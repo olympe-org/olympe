@@ -6,7 +6,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from typing import AsyncGenerator, Optional
 
-from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException
+from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Request
 from fastapi.responses import FileResponse, StreamingResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
@@ -210,9 +210,25 @@ async def stream_job(job_id: str, user: dict = Depends(require_auth)):
   )
 
 
+_RANGE_CHUNK = 1024 * 1024  # 1 Mo
+
+
+def _iter_file_range(path: str, start: int, end: int, chunk_size: int = _RANGE_CHUNK):
+  with open(path, "rb") as f:
+    f.seek(start)
+    remaining = end - start + 1
+    while remaining > 0:
+      chunk = f.read(min(chunk_size, remaining))
+      if not chunk:
+        break
+      remaining -= len(chunk)
+      yield chunk
+
+
 @router.get("/{job_id}/download")
 async def download_job(
   job_id: str,
+  request: Request,
   token: Optional[str] = None,
   credentials: Optional[HTTPAuthorizationCredentials] = Depends(HTTPBearer(auto_error=False)),
   conn = Depends(get_db),
@@ -250,11 +266,37 @@ async def download_job(
     raise HTTPException(status_code=404, detail="Fichier final.mp4 introuvable sur le disque.")
 
   filename = f"{job['title']}_{job_id[:8]}.mp4"
+  content_disposition = f"{disposition}; filename=\"{filename}\""
+  file_size = os.path.getsize(path)
+
+  range_header = request.headers.get("range")
+  if range_header:
+    match = re.match(r"bytes=(\d+)-(\d*)", range_header)
+    if not match:
+      raise HTTPException(status_code=416, detail="Range invalide.")
+    start = int(match.group(1))
+    end = int(match.group(2)) if match.group(2) else file_size - 1
+    end = min(end, file_size - 1)
+    if start > end or start >= file_size:
+      raise HTTPException(status_code=416, detail="Range invalide.")
+
+    return StreamingResponse(
+      _iter_file_range(path, start, end),
+      status_code=206,
+      media_type="video/mp4",
+      headers={
+        "Content-Range": f"bytes {start}-{end}/{file_size}",
+        "Accept-Ranges": "bytes",
+        "Content-Length": str(end - start + 1),
+        "Content-Disposition": content_disposition,
+      },
+    )
+
   return FileResponse(
     path,
     media_type="video/mp4",
     filename=filename,
-    headers={"Content-Disposition": f"{disposition}; filename=\"{filename}\""},
+    headers={"Content-Disposition": content_disposition, "Accept-Ranges": "bytes"},
   )
 
 
