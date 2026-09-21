@@ -1,558 +1,605 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!doctype html>
 <html
-  xmlns="http://www.w3.org/1999/xhtml"
   lang="fr"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:v="urn:schemas-microsoft-com:vml"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
 >
   <head>
-    <meta
-      http-equiv="Content-Type"
-      content="text/html; charset=UTF-8"
-    />
+    <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0"
     />
-    <meta name="x-apple-disable-message-reformatting" />
-    <title>Vidéo non générée — Vexia Studio</title>
-    <style type="text/css">
-      body {
-        margin: 0 !important;
-        padding: 0 !important;
-        background-color: #1a1a1a;
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge"
+    />
+    <meta
+      name="color-scheme"
+      content="dark light"
+    />
+    <meta
+      name="supported-color-schemes"
+      content="dark light"
+    />
+    <title>Le rendu a échoué</title>
+    <!--[if mso]>
+      <noscript>
+        <xml>
+          <o:OfficeDocumentSettings>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+          </o:OfficeDocumentSettings>
+        </xml>
+      </noscript>
+      <style>
+        table,
+        td {
+          border-collapse: collapse;
+        }
+        * {
+          font-family: Arial, Helvetica, sans-serif !important;
+        }
+      </style>
+    <![endif]-->
+    <link
+      rel="preconnect"
+      href="https://fonts.googleapis.com"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body,
+      table,
+      td,
+      a {
+        -webkit-text-size-adjust: 100%;
+        -ms-text-size-adjust: 100%;
       }
-      @media only screen and (max-width: 600px) {
-        .wrap {
+      table,
+      td {
+        mso-table-lspace: 0pt;
+        mso-table-rspace: 0pt;
+      }
+      img {
+        -ms-interpolation-mode: bicubic;
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      a.vx-btn {
+        transition: opacity 0.15s ease;
+      }
+      a.vx-btn:hover {
+        opacity: 0.88;
+      }
+      a.vx-link:hover {
+        text-decoration: underline !important;
+      }
+
+      @media screen and (max-width: 600px) {
+        .vx-container {
           width: 100% !important;
         }
-        .card {
-          padding: 28px 24px !important;
+        .vx-px {
+          padding-left: 24px !important;
+          padding-right: 24px !important;
         }
-        .h1 {
+        .vx-py {
+          padding-top: 32px !important;
+          padding-bottom: 32px !important;
+        }
+        .vx-h1 {
           font-size: 24px !important;
+          line-height: 1.2 !important;
+        }
+        .vx-row-stack td {
+          display: block !important;
+          width: 100% !important;
+          text-align: left !important;
+          padding-bottom: 2px !important;
+        }
+      }
+
+      /* Dark is the default look (below); light-mode clients get overridden here.
+     Clients that don't understand prefers-color-scheme simply keep dark. */
+      @media (prefers-color-scheme: light) {
+        .vx-page {
+          background-color: #f5f4f0 !important;
+        }
+        .vx-card {
+          background-color: #ffffff !important;
+          border-color: #e7e5df !important;
+        }
+        .vx-card-soft {
+          background-color: #faf9f6 !important;
+          border-color: #e7e5df !important;
+        }
+        .vx-border {
+          border-color: #e7e5df !important;
+        }
+        .vx-fg {
+          color: #17171a !important;
+        }
+        .vx-muted {
+          color: #6b6a66 !important;
+        }
+        .vx-muted-dim {
+          color: #9a9994 !important;
+        }
+        .vx-accent-error {
+          color: #dc2626 !important;
+        }
+        .vx-dot-error {
+          background-color: #dc2626 !important;
+        }
+        .vx-error-box {
+          background-color: #fef2f2 !important;
+          border-color: #f5c6c6 !important;
+        }
+        .vx-error-label {
+          color: #b91c1c !important;
+        }
+        .vx-error-text {
+          color: #7f1d1d !important;
+        }
+        .vx-btn-bg {
+          background-color: #17171a !important;
+        }
+        .vx-btn-fg {
+          color: #ffffff !important;
         }
       }
     </style>
   </head>
   <body
-    bgcolor="#1a1a1a"
-    style="margin: 0; padding: 0; background-color: #1a1a1a"
+    class="vx-page"
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #121212;
+      font-family:
+        &quot;Inter&quot;,
+        -apple-system,
+        BlinkMacSystemFont,
+        &quot;Segoe UI&quot;,
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+    "
   >
+    <!-- Preheader (hidden preview text) -->
+    <div
+      style="
+        display: none;
+        max-height: 0;
+        overflow: hidden;
+        mso-hide: all;
+        font-size: 1px;
+        line-height: 1px;
+        color: #121212;
+      "
+    >
+      La génération de ta vidéo a échoué — voici ce qui s'est passé.
+    </div>
+
     <table
       role="presentation"
+      width="100%"
       cellpadding="0"
       cellspacing="0"
       border="0"
-      width="100%"
-      bgcolor="#1a1a1a"
-      style="background-color: #1a1a1a"
+      class="vx-page"
+      style="background-color: #121212"
     >
       <tr>
         <td
           align="center"
-          valign="top"
-          style="padding: 52px 20px 44px 20px"
+          class="vx-py"
+          style="padding: 48px 16px"
         >
           <table
             role="presentation"
-            class="wrap"
+            width="600"
             cellpadding="0"
             cellspacing="0"
             border="0"
-            width="560"
-            style="width: 560px; max-width: 560px"
+            class="vx-container"
+            style="width: 600px; max-width: 600px"
           >
-            <!-- Brand mark -->
+            <!-- Wordmark -->
             <tr>
-              <td style="padding-bottom: 28px">
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
+              <td
+                align="center"
+                style="padding-bottom: 28px"
+              >
+                <span
+                  class="vx-fg"
+                  style="
+                    font-size: 18px;
+                    font-weight: 800;
+                    letter-spacing: -0.02em;
+                    color: #f5f5f5;
+                    text-transform: uppercase;
+                  "
+                  >Vexia</span
+                ><span
+                  style="
+                    display: inline-block;
+                    width: 5px;
+                    height: 5px;
+                    margin-left: 4px;
+                    margin-bottom: 8px;
+                    border-radius: 50%;
+                    background-color: #a78bfa;
+                    vertical-align: top;
+                  "
+                  >&nbsp;</span
                 >
-                  <tr>
-                    <td
-                      valign="middle"
-                      style="padding-right: 8px"
-                    >
-                      <table
-                        role="presentation"
-                        cellpadding="0"
-                        cellspacing="0"
-                        border="0"
-                      >
-                        <tr>
-                          <td
-                            bgcolor="#a78bfa"
-                            width="16"
-                            height="1"
-                            style="
-                              width: 16px;
-                              height: 1px;
-                              line-height: 1px;
-                              font-size: 1px;
-                            "
-                          >
-                            &nbsp;
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                    <td valign="middle">
-                      <span
-                        style="
-                          font-family:
-                            -apple-system, BlinkMacSystemFont,
-                            &quot;Segoe UI&quot;, &quot;Helvetica Neue&quot;,
-                            Arial, sans-serif;
-                          font-size: 10px;
-                          font-weight: 700;
-                          letter-spacing: 0.22em;
-                          color: #a78bfa;
-                          text-transform: uppercase;
-                          line-height: 1;
-                        "
-                        >VEXIA STUDIO</span
-                      >
-                    </td>
-                  </tr>
-                </table>
               </td>
             </tr>
 
             <!-- Card -->
             <tr>
               <td
-                class="card"
-                bgcolor="#232323"
+                class="vx-card"
                 style="
-                  background-color: #232323;
-                  border-radius: 12px;
-                  border: 1px solid #2c2c2c;
-                  padding: 36px 40px;
+                  background-color: #1e1e1e;
+                  border: 1px solid #313131;
+                  border-radius: 24px;
                 "
               >
-                <!-- Eyebrow -->
                 <table
                   role="presentation"
+                  width="100%"
                   cellpadding="0"
                   cellspacing="0"
                   border="0"
                 >
                   <tr>
                     <td
-                      valign="middle"
-                      style="padding-right: 8px"
+                      class="vx-px"
+                      style="padding: 48px 48px 40px 48px"
+                      align="center"
                     >
+                      <!-- Badge -->
                       <table
                         role="presentation"
                         cellpadding="0"
                         cellspacing="0"
                         border="0"
+                        style="margin: 0 auto 20px auto"
                       >
                         <tr>
                           <td
-                            bgcolor="#f87171"
-                            width="14"
-                            height="1"
+                            class="vx-border"
                             style="
-                              width: 14px;
-                              height: 1px;
-                              line-height: 1px;
-                              font-size: 1px;
+                              border: 1px solid #313131;
+                              border-radius: 999px;
+                              padding: 6px 14px;
                             "
                           >
-                            &nbsp;
+                            <span
+                              class="vx-dot-error"
+                              style="
+                                display: inline-block;
+                                width: 6px;
+                                height: 6px;
+                                margin-right: 8px;
+                                border-radius: 50%;
+                                background-color: #f87171;
+                                vertical-align: middle;
+                              "
+                              >&nbsp;</span
+                            ><span
+                              class="vx-muted"
+                              style="
+                                font-size: 12px;
+                                font-weight: 500;
+                                color: #a3a3a3;
+                                vertical-align: middle;
+                              "
+                              >Erreur</span
+                            >
                           </td>
                         </tr>
                       </table>
-                    </td>
-                    <td valign="middle">
-                      <span
+
+                      <!-- Heading -->
+                      <div
+                        class="vx-h1 vx-fg"
                         style="
-                          font-family:
-                            -apple-system, BlinkMacSystemFont,
-                            &quot;Segoe UI&quot;, &quot;Helvetica Neue&quot;,
-                            Arial, sans-serif;
-                          font-size: 10px;
+                          font-size: 28px;
+                          line-height: 1.2;
                           font-weight: 700;
-                          letter-spacing: 0.18em;
-                          color: #f87171;
-                          text-transform: uppercase;
-                          line-height: 1;
-                        "
-                        >Rendu &nbsp;·&nbsp; Échoué</span
-                      >
-                    </td>
-                  </tr>
-                </table>
-
-                <!-- Heading -->
-                <h1
-                  class="h1"
-                  style="
-                    margin: 8px 0 0 0;
-                    font-family:
-                      -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;,
-                      &quot;Helvetica Neue&quot;, Arial, sans-serif;
-                    font-size: 28px;
-                    font-weight: 900;
-                    color: #efefef;
-                    text-transform: uppercase;
-                    letter-spacing: -0.03em;
-                    line-height: 1.05;
-                    mso-line-height-rule: exactly;
-                  "
-                >
-                  La vidéo n'a pas<br />pu être générée.
-                </h1>
-
-                <p
-                  style="
-                    margin: 16px 0 0 0;
-                    font-family:
-                      -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;,
-                      &quot;Helvetica Neue&quot;, Arial, sans-serif;
-                    font-size: 14px;
-                    color: #686868;
-                    line-height: 1.65;
-                  "
-                >
-                  Une erreur est survenue lors du traitement. Aucune action
-                  n'est requise de votre part — revenez dans votre espace client
-                  pour relancer le rendu si besoin.
-                </p>
-
-                <!-- Spacer -->
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  width="100%"
-                >
-                  <tr>
-                    <td
-                      height="28"
-                      style="height: 28px; line-height: 28px; font-size: 1px"
-                    >
-                      &nbsp;
-                    </td>
-                  </tr>
-                </table>
-                <!-- Divider -->
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  width="100%"
-                >
-                  <tr>
-                    <td
-                      bgcolor="#2c2c2c"
-                      height="1"
-                      style="height: 1px; line-height: 1px; font-size: 1px"
-                    >
-                      &nbsp;
-                    </td>
-                  </tr>
-                </table>
-                <!-- Spacer -->
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  width="100%"
-                >
-                  <tr>
-                    <td
-                      height="24"
-                      style="height: 24px; line-height: 24px; font-size: 1px"
-                    >
-                      &nbsp;
-                    </td>
-                  </tr>
-                </table>
-
-                <!-- Inset: Vidéo -->
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  width="100%"
-                >
-                  <tr>
-                    <td
-                      style="
-                        background-color: #1a1a1a;
-                        border-radius: 8px;
-                        border: 1px solid #272727;
-                        padding: 14px 16px;
-                      "
-                    >
-                      <p
-                        style="
-                          margin: 0 0 6px 0;
-                          font-family:
-                            -apple-system, BlinkMacSystemFont,
-                            &quot;Segoe UI&quot;, &quot;Helvetica Neue&quot;,
-                            Arial, sans-serif;
-                          font-size: 9px;
-                          font-weight: 700;
-                          letter-spacing: 0.18em;
-                          color: #555555;
-                          text-transform: uppercase;
-                          line-height: 1;
+                          letter-spacing: -0.02em;
+                          color: #f5f5f5;
+                          margin: 0 0 12px 0;
                         "
                       >
-                        Vidéo
-                      </p>
+                        Le rendu a
+                        <span
+                          class="vx-accent-error"
+                          style="color: #f87171"
+                          >échoué</span
+                        >
+                      </div>
+
+                      <!-- Subtitle -->
                       <p
+                        class="vx-muted"
                         style="
-                          margin: 0;
-                          font-family:
-                            -apple-system, BlinkMacSystemFont,
-                            &quot;Segoe UI&quot;, &quot;Helvetica Neue&quot;,
-                            Arial, sans-serif;
+                          margin: 0 0 32px 0;
                           font-size: 15px;
-                          font-weight: 700;
-                          color: #efefef;
-                          line-height: 1.35;
-                          word-break: break-word;
-                        "
-                      >
-                        {{job_title}}
-                      </p>
-                    </td>
-                  </tr>
-                </table>
-
-                <!-- Spacer -->
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  width="100%"
-                >
-                  <tr>
-                    <td
-                      height="10"
-                      style="height: 10px; line-height: 10px; font-size: 1px"
-                    >
-                      &nbsp;
-                    </td>
-                  </tr>
-                </table>
-
-                <!-- Error block -->
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  width="100%"
-                >
-                  <tr>
-                    <td
-                      valign="top"
-                      bgcolor="#f87171"
-                      width="3"
-                      style="
-                        width: 3px;
-                        background-color: #f87171;
-                        border-radius: 3px 0 0 3px;
-                        font-size: 1px;
-                        line-height: 1px;
-                      "
-                    >
-                      &nbsp;
-                    </td>
-                    <td
-                      valign="top"
-                      style="
-                        background-color: #1a1a1a;
-                        border-radius: 0 8px 8px 0;
-                        border-top: 1px solid #272727;
-                        border-right: 1px solid #272727;
-                        border-bottom: 1px solid #272727;
-                        padding: 14px 16px;
-                      "
-                    >
-                      <p
-                        style="
-                          margin: 0 0 8px 0;
-                          font-family:
-                            -apple-system, BlinkMacSystemFont,
-                            &quot;Segoe UI&quot;, &quot;Helvetica Neue&quot;,
-                            Arial, sans-serif;
-                          font-size: 9px;
-                          font-weight: 700;
-                          letter-spacing: 0.18em;
-                          color: #f87171;
-                          text-transform: uppercase;
-                          line-height: 1;
-                        "
-                      >
-                        Erreur
-                      </p>
-                      <p
-                        style="
-                          margin: 0;
-                          font-family:
-                            &quot;Courier New&quot;, Courier, monospace;
-                          font-size: 12px;
-                          font-weight: 400;
-                          color: #a0a0a0;
                           line-height: 1.6;
-                          word-break: break-word;
-                          white-space: pre-wrap;
+                          color: #a3a3a3;
                         "
                       >
-                        {{error}}
+                        La génération de « {{job_title}} » n'a pas pu aboutir.
+                        <!-- Aucun crédit ne t'a été décompté pour ce rendu. -->
                       </p>
-                    </td>
-                  </tr>
-                </table>
 
-                <!-- Spacer -->
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  width="100%"
-                >
-                  <tr>
-                    <td
-                      height="28"
-                      style="height: 28px; line-height: 28px; font-size: 1px"
-                    >
-                      &nbsp;
-                    </td>
-                  </tr>
-                </table>
-                <!-- Divider -->
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  width="100%"
-                >
-                  <tr>
-                    <td
-                      bgcolor="#2c2c2c"
-                      height="1"
-                      style="height: 1px; line-height: 1px; font-size: 1px"
-                    >
-                      &nbsp;
-                    </td>
-                  </tr>
-                </table>
-                <!-- Spacer -->
-                <table
-                  role="presentation"
-                  cellpadding="0"
-                  cellspacing="0"
-                  border="0"
-                  width="100%"
-                >
-                  <tr>
-                    <td
-                      height="24"
-                      style="height: 24px; line-height: 24px; font-size: 1px"
-                    >
-                      &nbsp;
-                    </td>
-                  </tr>
-                </table>
+                      <!-- Meta row -->
+                      <table
+                        role="presentation"
+                        width="100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        class="vx-card-soft"
+                        style="
+                          background-color: #262626;
+                          border: 1px solid #313131;
+                          border-radius: 16px;
+                          margin-bottom: 16px;
+                        "
+                      >
+                        <tr>
+                          <td style="padding: 6px 20px">
+                            <table
+                              role="presentation"
+                              width="100%"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                              class="vx-row-stack"
+                            >
+                              <tr>
+                                <td
+                                  class="vx-border vx-muted"
+                                  style="
+                                    padding: 14px 0;
+                                    border-bottom: 1px solid #313131;
+                                    font-size: 13px;
+                                    color: #a3a3a3;
+                                  "
+                                >
+                                  Titre
+                                </td>
+                                <td
+                                  class="vx-border vx-fg"
+                                  style="
+                                    padding: 14px 0;
+                                    border-bottom: 1px solid #313131;
+                                    font-size: 13px;
+                                    color: #f5f5f5;
+                                    font-weight: 600;
+                                    text-align: right;
+                                  "
+                                >
+                                  {{job_title}}
+                                </td>
+                              </tr>
+                            </table>
+                            <table
+                              role="presentation"
+                              width="100%"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                              class="vx-row-stack"
+                            >
+                              <tr>
+                                <td
+                                  class="vx-border vx-muted"
+                                  style="
+                                    padding: 14px 0;
+                                    border-bottom: 1px solid #313131;
+                                    font-size: 13px;
+                                    color: #a3a3a3;
+                                  "
+                                >
+                                  Extraits
+                                </td>
+                                <td
+                                  class="vx-border vx-fg"
+                                  style="
+                                    padding: 14px 0;
+                                    border-bottom: 1px solid #313131;
+                                    font-size: 13px;
+                                    color: #f5f5f5;
+                                    font-weight: 600;
+                                    text-align: right;
+                                  "
+                                >
+                                  {{clip_count}}
+                                </td>
+                              </tr>
+                            </table>
+                            <table
+                              role="presentation"
+                              width="100%"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                              class="vx-row-stack"
+                            >
+                              <tr>
+                                <td
+                                  class="vx-muted"
+                                  style="
+                                    padding: 14px 0;
+                                    font-size: 13px;
+                                    color: #a3a3a3;
+                                  "
+                                >
+                                  Modèle
+                                </td>
+                                <td
+                                  class="vx-fg"
+                                  style="
+                                    padding: 14px 0;
+                                    font-size: 13px;
+                                    color: #f5f5f5;
+                                    font-weight: 600;
+                                    text-align: right;
+                                    text-transform: capitalize;
+                                  "
+                                >
+                                  {{template}}
+                                </td>
+                              </tr>
+                            </table>
+                          </td>
+                        </tr>
+                      </table>
 
-                <!-- CTA -->
-                <!--[if mso]>
-                  <v:roundrect
-                    xmlns:v="urn:schemas-microsoft-com:vml"
-                    xmlns:w="urn:schemas-microsoft-com:office:word"
-                    href="{{app_url}}"
-                    style="height: 40px; v-text-anchor: middle; width: 190px"
-                    arcsize="20%"
-                    stroke="f"
-                    fillcolor="#2a2a2a"
-                  >
-                    <w:anchorlock />
-                    <center
-                      style="
-                        color: #c0c0c0;
-                        font-family: sans-serif;
-                        font-size: 12px;
-                        font-weight: 600;
-                      "
-                    >
-                      Voir l'espace client
-                    </center>
-                  </v:roundrect>
-                <![endif]-->
-                <!--[if !mso]><!-->
-                <a
-                  href="{{app_url}}"
-                  style="
-                    display: inline-block;
-                    font-family:
-                      -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;,
-                      &quot;Helvetica Neue&quot;, Arial, sans-serif;
-                    font-size: 12px;
-                    font-weight: 600;
-                    color: #c0c0c0;
-                    text-decoration: none;
-                    background-color: #2a2a2a;
-                    border: 1px solid #383838;
-                    border-radius: 8px;
-                    padding: 11px 20px;
-                    line-height: 1;
-                    mso-line-height-rule: exactly;
-                    letter-spacing: 0.02em;
-                  "
-                  >Voir l'espace client</a
-                >
-                <!--<![endif]-->
+                      <!-- Error details -->
+                      <table
+                        role="presentation"
+                        width="100%"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        class="vx-error-box"
+                        style="
+                          background-color: #3a1717;
+                          border: 1px solid #5c2626;
+                          border-radius: 16px;
+                          margin-bottom: 32px;
+                        "
+                      >
+                        <tr>
+                          <td style="padding: 16px 20px">
+                            <p
+                              class="vx-error-label"
+                              style="
+                                margin: 0 0 4px 0;
+                                font-size: 11px;
+                                font-weight: 600;
+                                letter-spacing: 0.02em;
+                                text-transform: uppercase;
+                                color: #f87171;
+                              "
+                            >
+                              Détail de l'erreur
+                            </p>
+                            <p
+                              class="vx-error-text"
+                              style="
+                                margin: 0;
+                                font-size: 13px;
+                                line-height: 1.6;
+                                color: #fca5a5;
+                                word-break: break-word;
+                              "
+                            >
+                              {{error}}
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <!-- CTA -->
+                      <table
+                        role="presentation"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        style="margin: 0 auto"
+                      >
+                        <tr>
+                          <td
+                            class="vx-btn-bg"
+                            style="
+                              border-radius: 999px;
+                              background-color: #f5f5f5;
+                            "
+                          >
+                            <a
+                              href="{{app_url}}"
+                              class="vx-btn vx-btn-fg"
+                              target="_blank"
+                              style="
+                                display: inline-block;
+                                padding: 15px 36px;
+                                font-size: 15px;
+                                font-weight: 600;
+                                color: #121212;
+                                text-decoration: none;
+                                border-radius: 999px;
+                              "
+                            >
+                              Relancer un rendu
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <!-- <p
+                        class="vx-muted-dim"
+                        style="
+                          margin: 16px 0 0 0;
+                          font-size: 12px;
+                          color: #6e6e6e;
+                        "
+                      >
+                        Le problème persiste ? Réponds à cet e-mail, on t'aide.
+                      </p> -->
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
 
             <!-- Footer -->
             <tr>
-              <td style="padding-top: 22px">
+              <td
+                align="center"
+                style="padding: 32px 24px 0 24px"
+              >
                 <p
-                  style="
-                    margin: 0 0 8px 0;
-                    font-family:
-                      -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;,
-                      &quot;Helvetica Neue&quot;, Arial, sans-serif;
-                    font-size: 11px;
-                    line-height: 1.7;
-                    color: #464646;
-                  "
-                >
-                  Si l'erreur se reproduit, n'hésitez pas à nous contacter en
-                  répondant à cet email.
-                </p>
-                <p
-                  style="
-                    margin: 0;
-                    font-family:
-                      -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;,
-                      &quot;Helvetica Neue&quot;, Arial, sans-serif;
-                    font-size: 11px;
-                    line-height: 1;
-                  "
+                  class="vx-muted"
+                  style="margin: 0 0 6px 0; font-size: 13px; color: #a3a3a3"
                 >
                   <a
-                    href="https://vexia.studio"
-                    style="color: #464646; text-decoration: none"
-                    >vexia.studio</a
+                    href="{{app_url}}"
+                    class="vx-link vx-fg"
+                    style="
+                      color: #f5f5f5;
+                      font-weight: 600;
+                      text-decoration: none;
+                    "
+                    >Vexia</a
                   >
+                </p>
+                <p
+                  class="vx-muted-dim"
+                  style="margin: 0; font-size: 11px; color: #6e6e6e"
+                >
+                  Référence : {{job_id}}
                 </p>
               </td>
             </tr>
