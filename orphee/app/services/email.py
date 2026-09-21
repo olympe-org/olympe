@@ -8,7 +8,7 @@ import resend
 from jose import jwt
 from psycopg.rows import dict_row
 
-from ..config import API_URL, APP_URL, DATABASE_URL, JWT_SECRET, RESEND_API_KEY, RESEND_FROM
+from ..config import APP_URL, DATABASE_URL, JWT_SECRET, RESEND_API_KEY, RESEND_FROM
 
 _DL_TOKEN_HOURS = 48
 _TMPL_DIR = os.path.join(os.path.dirname(__file__), "templates")
@@ -39,7 +39,9 @@ def build_share_link(job_id: str) -> tuple[str, datetime]:
   """
   expire = datetime.now(timezone.utc) + timedelta(hours=_DL_TOKEN_HOURS)
   token = create_download_token(job_id)
-  url = f"{API_URL}/jobs/{job_id}/download?token={token}"
+  # Pointe sur vexia.studio (page produit), pas directement sur l'API :
+  # la page se charge elle-même d'appeler orphee.olympe.center avec ce token.
+  url = f"{APP_URL}/jobs/{job_id}/download?token={token}"
   return url, expire
 
 
