@@ -70,7 +70,10 @@ def _fmt_duration(seconds: int) -> str:
   return f"{m}m {s:02d}s" if s else f"{m}m"
 
 
-async def send_video_ready(user_id: str, job_id: str, job_title: str, duration: int) -> None:
+async def send_video_ready(
+  user_id: str, job_id: str, job_title: str, duration: int,
+  file_size: int | None = None, clip_count: int = 0, template: str = "",
+) -> None:
   if not RESEND_API_KEY:
     return
 
@@ -84,6 +87,10 @@ async def send_video_ready(user_id: str, job_id: str, job_title: str, duration: 
     duration=_fmt_duration(duration),
     download_url=download_url,
     app_url=APP_URL,
+    job_id=job_id,
+    file_size=file_size if file_size is not None else "",
+    clip_count=clip_count,
+    template=template,
   )
 
   resend.api_key = RESEND_API_KEY
@@ -98,7 +105,10 @@ async def send_video_ready(user_id: str, job_id: str, job_title: str, duration: 
   )
 
 
-async def send_video_failed(user_id: str, _job_id: str, job_title: str, error: str) -> None:
+async def send_video_failed(
+  user_id: str, job_id: str, job_title: str, error: str,
+  clip_count: int = 0, template: str = "",
+) -> None:
   if not RESEND_API_KEY:
     return
 
@@ -111,6 +121,9 @@ async def send_video_failed(user_id: str, _job_id: str, job_title: str, error: s
     job_title=job_title,
     error=error_display,
     app_url=APP_URL,
+    job_id=job_id,
+    clip_count=clip_count,
+    template=template,
   )
 
   resend.api_key = RESEND_API_KEY

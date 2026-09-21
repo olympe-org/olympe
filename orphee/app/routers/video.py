@@ -372,7 +372,10 @@ async def _run_render_pipeline(
     await db_increment_user_metrics(user_id, duration_seconds=duration, clips_used=len(clips))
     await db_cleanup_max_jobs(user_id, max_jobs)
     job = get_job(job_id)
-    await send_video_ready(user_id, job_id, job["title"] if job else job_id, duration)
+    await send_video_ready(
+      user_id, job_id, job["title"] if job else job_id, duration,
+      file_size=file_size, clip_count=len(clips), template=payload.get("template", ""),
+    )
   except asyncio.CancelledError:
     pass
   except Exception as e:
@@ -380,7 +383,11 @@ async def _run_render_pipeline(
     update_job(job_id, status=FAILED, error=str(e), message=f"Erreur : {e}")
     await db_update_job_status(job_id, FAILED, error=str(e))
     job = get_job(job_id)
-    await send_video_failed(user_id, job_id, job["title"] if job else job_id, str(e))
+    clip_count = len(payload.get("data", []))
+    await send_video_failed(
+      user_id, job_id, job["title"] if job else job_id, str(e),
+      clip_count=clip_count, template=payload.get("template", ""),
+    )
     # Nettoie les fichiers disque mais garde le job en mémoire (status=FAILED)
     # pour que le générateur SSE puisse remonter l'erreur avant la fin de la connexion.
     job_dir = os.path.join(STORAGE_ROOT, user_id, job_id)
