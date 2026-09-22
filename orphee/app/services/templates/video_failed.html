@@ -235,21 +235,36 @@
                     text-transform: uppercase;
                   "
                   >Vexia</span
-                ><span
+                ><table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
                   style="
-                    display: inline-block;
-                    width: 5px;
-                    min-width: 5px;
-                    min-height: 5px;
-                    height: 5px;
+                    display: inline-table;
                     margin-left: 4px;
                     margin-bottom: 8px;
-                    border-radius: 50%;
-                    background-color: #a78bfa;
                     vertical-align: top;
                   "
-                  >&nbsp;</span
                 >
+                  <tr>
+                    <td
+                      width="5"
+                      height="5"
+                      bgcolor="#a78bfa"
+                      style="
+                        width: 5px;
+                        height: 5px;
+                        line-height: 5px;
+                        font-size: 5px;
+                        background-color: #a78bfa;
+                        border-radius: 50%;
+                      "
+                    >
+                      &nbsp;
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
 
@@ -293,30 +308,60 @@
                               padding: 6px 14px;
                             "
                           >
-                            <span
-                              class="vx-dot-error"
-                              style="
-                                display: inline-block;
-                                width: 6px;
-                                min-width: 6px;
-                                min-height: 6px;
-                                height: 6px;
-                                margin-right: 8px;
-                                border-radius: 50%;
-                                background-color: #f87171;
-                                vertical-align: middle;
-                              "
-                              >&nbsp;</span
-                            ><span
-                              class="vx-muted"
-                              style="
+                            <table
+                              role="presentation"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
+                            >
+                              <tr>
+                                <td
+                                  width="6"
+                                  valign="middle"
+                                  style="padding-right: 8px"
+                                >
+                                  <table
+                                    role="presentation"
+                                    cellpadding="0"
+                                    cellspacing="0"
+                                    border="0"
+                                    width="6"
+                                    height="6"
+                                  >
+                                    <tr>
+                                      <td
+                                        class="vx-dot-error"
+                                        width="6"
+                                        height="6"
+                                        bgcolor="#f87171"
+                                        style="
+                                          width: 6px;
+                                          height: 6px;
+                                          line-height: 6px;
+                                          font-size: 6px;
+                                          background-color: #f87171;
+                                          border-radius: 50%;
+                                        "
+                                      >
+                                        &nbsp;
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                                <td
+                                  valign="middle"
+                                  class="vx-muted"
+                                  style="
+                                white-space: nowrap;
                                 font-size: 12px;
                                 font-weight: 500;
                                 color: #a3a3a3;
-                                vertical-align: middle;
                               "
-                              >Erreur</span
-                            >
+                                >
+                                  Erreur
+                                </td>
+                              </tr>
+                            </table>
                           </td>
                         </tr>
                       </table>

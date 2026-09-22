@@ -225,21 +225,36 @@
                     text-transform: uppercase;
                   "
                   >Vexia</span
-                ><span
+                ><table
+                  role="presentation"
+                  cellpadding="0"
+                  cellspacing="0"
+                  border="0"
                   style="
-                    display: inline-block;
-                    width: 5px;
-                    min-width: 5px;
-                    min-height: 5px;
-                    height: 5px;
+                    display: inline-table;
                     margin-left: 4px;
                     margin-bottom: 8px;
-                    border-radius: 50%;
-                    background-color: #a78bfa;
                     vertical-align: top;
                   "
-                  >&nbsp;</span
                 >
+                  <tr>
+                    <td
+                      width="5"
+                      height="5"
+                      bgcolor="#a78bfa"
+                      style="
+                        width: 5px;
+                        height: 5px;
+                        line-height: 5px;
+                        font-size: 5px;
+                        background-color: #a78bfa;
+                        border-radius: 50%;
+                      "
+                    >
+                      &nbsp;
+                    </td>
+                  </tr>
+                </table>
               </td>
             </tr>
 
@@ -281,34 +296,62 @@
                               border: 1px solid #313131;
                               border-radius: 999px;
                               padding: 6px 14px;
-                              display: flex;
-                              align-items: center;
                             "
                           >
-                            <span
-                              class="vx-dot-warn"
-                              style="
-                                display: inline-block;
-                                width: 6px;
-                                min-width: 6px;
-                                min-height: 6px;
-                                height: 6px;
-                                margin-right: 8px;
-                                border-radius: 50%;
-                                background-color: #fbbf24;
-                                vertical-align: middle;
-                              "
-                              >&nbsp;</span
-                            ><span
-                              class="vx-muted"
-                              style="
-                                font-size: 12px;
-                                font-weight: 500;
-                                color: #a3a3a3;
-                                vertical-align: middle;
-                              "
-                              >Annulé</span
+                            <table
+                              role="presentation"
+                              cellpadding="0"
+                              cellspacing="0"
+                              border="0"
                             >
+                              <tr>
+                                <td
+                                  width="6"
+                                  valign="middle"
+                                  style="padding-right: 8px"
+                                >
+                                  <table
+                                    role="presentation"
+                                    cellpadding="0"
+                                    cellspacing="0"
+                                    border="0"
+                                    width="6"
+                                    height="6"
+                                  >
+                                    <tr>
+                                      <td
+                                        class="vx-dot-warn"
+                                        width="6"
+                                        height="6"
+                                        bgcolor="#fbbf24"
+                                        style="
+                                          width: 6px;
+                                          height: 6px;
+                                          line-height: 6px;
+                                          font-size: 6px;
+                                          background-color: #fbbf24;
+                                          border-radius: 50%;
+                                        "
+                                      >
+                                        &nbsp;
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                                <td
+                                  valign="middle"
+                                  class="vx-muted"
+                                  style="
+                                    white-space: nowrap;
+                                    font-size: 12px;
+                                    font-weight: 500;
+                                    color: #a3a3a3;
+                                  "
+                                >
+                                  Annulé
+                                </td>
+                              </tr>
+                            </table>
                           </td>
                         </tr>
                       </table>
@@ -374,76 +417,6 @@
                             >
                               <tr>
                                 <td
-                                  class="vx-border vx-muted"
-                                  style="
-                                    padding: 14px 0;
-                                    border-bottom: 1px solid #313131;
-                                    font-size: 13px;
-                                    color: #a3a3a3;
-                                  "
-                                >
-                                  Titre
-                                </td>
-                                <td
-                                  class="vx-border vx-fg"
-                                  style="
-                                    padding: 14px 0;
-                                    border-bottom: 1px solid #313131;
-                                    font-size: 13px;
-                                    color: #f5f5f5;
-                                    font-weight: 600;
-                                    text-align: right;
-                                  "
-                                >
-                                  {{job_title}}
-                                </td>
-                              </tr>
-                            </table>
-                            <table
-                              role="presentation"
-                              width="100%"
-                              cellpadding="0"
-                              cellspacing="0"
-                              border="0"
-                              class="vx-row-stack"
-                            >
-                              <tr>
-                                <td
-                                  class="vx-border vx-muted"
-                                  style="
-                                    padding: 14px 0;
-                                    border-bottom: 1px solid #313131;
-                                    font-size: 13px;
-                                    color: #a3a3a3;
-                                  "
-                                >
-                                  Extraits
-                                </td>
-                                <td
-                                  class="vx-border vx-fg"
-                                  style="
-                                    padding: 14px 0;
-                                    border-bottom: 1px solid #313131;
-                                    font-size: 13px;
-                                    color: #f5f5f5;
-                                    font-weight: 600;
-                                    text-align: right;
-                                  "
-                                >
-                                  {{clip_count}}
-                                </td>
-                              </tr>
-                            </table>
-                            <table
-                              role="presentation"
-                              width="100%"
-                              cellpadding="0"
-                              cellspacing="0"
-                              border="0"
-                              class="vx-row-stack"
-                            >
-                              <tr>
-                                <td
                                   class="vx-muted"
                                   style="
                                     padding: 14px 0;
@@ -451,7 +424,7 @@
                                     color: #a3a3a3;
                                   "
                                 >
-                                  Modèle
+                                  Titre
                                 </td>
                                 <td
                                   class="vx-fg"
@@ -461,10 +434,9 @@
                                     color: #f5f5f5;
                                     font-weight: 600;
                                     text-align: right;
-                                    text-transform: capitalize;
                                   "
                                 >
-                                  {{template}}
+                                  {{job_title}}
                                 </td>
                               </tr>
                             </table>
