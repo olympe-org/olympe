@@ -341,7 +341,8 @@ async def delete_job(job_id: str, user: dict = Depends(require_auth)):
     raise HTTPException(status_code=403, detail="Accès refusé.")
 
   if mem_job:
-    is_admin_action = user["is_admin"] and str(db_job["user_id"]) != str(user["id"])
+    was_active = mem_job["status"] not in (DONE, FAILED, CANCELLED)
+    is_admin_action = was_active and user["is_admin"] and str(db_job["user_id"]) != str(user["id"])
     cancel_job(job_id)
     purge_job(job_id)
     if is_admin_action:
