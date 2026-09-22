@@ -344,7 +344,16 @@ async def delete_job(job_id: str, user: dict = Depends(require_auth)):
     was_active = mem_job["status"] not in (DONE, FAILED, CANCELLED)
     is_admin_action = was_active and user["is_admin"] and str(db_job["user_id"]) != str(user["id"])
     cancel_job(job_id)
-    purge_job(job_id)
+    if was_active:
+      # Ne pas purger tout de suite : laisse le job en mémoire avec son statut
+      # CANCELLED le temps qu'un flux SSE ouvert (l'utilisateur qui attend son
+      # rendu) le voie passer par cet état terminal proprement, plutôt que de
+      # tomber sur un job introuvable.
+      job_dir = os.path.join(STORAGE_ROOT, str(db_job["user_id"]), job_id)
+      if os.path.isdir(job_dir):
+        shutil.rmtree(job_dir, ignore_errors=True)
+    else:
+      purge_job(job_id)
     if is_admin_action:
       await send_video_cancelled(str(db_job["user_id"]), job_id, db_job.get("title") or job_id)
   else:
