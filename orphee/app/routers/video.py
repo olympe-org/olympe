@@ -203,7 +203,7 @@ async def stream_job(job_id: str, user: dict = Depends(require_auth)):
   job = get_job(job_id)
   if not job:
     raise HTTPException(status_code=404, detail="Job introuvable.")
-  if job["user_id"] != str(user["id"]):
+  if job["user_id"] != str(user["id"]) and not user["is_admin"]:
     raise HTTPException(status_code=403, detail="Accès refusé.")
 
   return StreamingResponse(
