@@ -12,10 +12,13 @@ async def search_youtube(
   limit: int = Query(10, ge=1, le=25),
   user: dict = Depends(require_auth),
 ):
-  """Cherche des vidéos YouTube (titre, durée, miniature) sans les télécharger."""
+  """Cherche des vidéos YouTube (titre, durée, vues) sans les télécharger.
+
+  Renvoie un tableau au format Invidious (type/videoId/title/author/
+  lengthSeconds/viewCountText), pour que le front n'ait qu'un seul schéma
+  à gérer entre ce backend et une instance Invidious publique.
+  """
   try:
-    results = await yt_dlp.search(q, limit=limit)
+    return await yt_dlp.search(q, limit=limit)
   except RuntimeError as e:
     raise HTTPException(status_code=502, detail=str(e))
-
-  return {"results": results}

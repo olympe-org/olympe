@@ -115,6 +115,18 @@ async def download(job_id: str, url: str, output_dir: str,
   return os.path.join(output_dir, files[0]), sections_used
 
 
+def _fmt_view_count(count) -> str | None:
+  if not isinstance(count, (int, float)) or count <= 0:
+    return None
+  if count >= 1_000_000_000:
+    return f"{count / 1_000_000_000:.1f}B views"
+  if count >= 1_000_000:
+    return f"{count / 1_000_000:.1f}M views"
+  if count >= 1_000:
+    return f"{count / 1_000:.1f}K views"
+  return f"{int(count)} views"
+
+
 async def search(query: str, limit: int = 10) -> list[dict]:
   """Cherche des vidéos YouTube via yt-dlp (pas de téléchargement)."""
   cmd = [
@@ -145,13 +157,18 @@ async def search(query: str, limit: int = 10) -> list[dict]:
     if not line:
       continue
     entry = json.loads(line)
-    results.append({
-      "id": entry.get("id"),
+    # Format aligné sur Invidious : le front n'a qu'un seul schéma à gérer,
+    # que la recherche vienne de ce backend ou d'une instance Invidious.
+    item = {
+      "type": "video",
+      "videoId": entry.get("id"),
       "title": entry.get("title"),
-      "url": entry.get("url") or f"https://www.youtube.com/watch?v={entry.get('id')}",
-      "duration": entry.get("duration"),
-      "thumbnail": entry.get("thumbnails", [{}])[-1].get("url") if entry.get("thumbnails") else None,
-      "channel": entry.get("channel") or entry.get("uploader"),
-    })
+      "author": entry.get("channel") or entry.get("uploader"),
+      "lengthSeconds": entry.get("duration"),
+    }
+    view_count_text = _fmt_view_count(entry.get("view_count"))
+    if view_count_text:
+      item["viewCountText"] = view_count_text
+    results.append(item)
 
   return results
