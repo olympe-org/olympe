@@ -106,9 +106,18 @@ async def _run(job_id: str, *args: str, label: str = "ffmpeg") -> None:
 
 # ── Pipeline legacy (single-clip) ─────────────────────────────────────────────
 
-async def extract_clip(job_id: str, source: str, start_time: str, duration: int, output_path: str) -> str:
-  """Extrait un clip à partir du timestamp et de la durée demandés."""
-  update_job(job_id, message=f"Extraction du clip à {start_time}...")
+async def extract_clip(
+  job_id: str, source: str, start_time: str, duration: int, output_path: str,
+  display_start_time: str | None = None,
+) -> str:
+  """Extrait un clip à partir du timestamp et de la durée demandés.
+
+  display_start_time : timestamp affiché dans le message de statut — utile
+  quand `start_time` a été ramené à 00:00:00 parce que le fichier source a
+  déjà été découpé au téléchargement (--download-sections), pour que
+  l'utilisateur voie le timestamp qu'il a réellement demandé.
+  """
+  update_job(job_id, message=f"Extraction du clip à {display_start_time or start_time}...")
 
   await _run(
     job_id,
@@ -1059,7 +1068,10 @@ async def render_video(job_id: str, user_id: str, payload: dict) -> None:
     # Si --download-sections a réussi, les timestamps du fichier commencent à 0
     extract_start = "00:00:00" if sections_used else start_time
     clip_path = os.path.join(clips_dir, f"clip_{i}.mp4")
-    await extract_clip(job_id, source_file, extract_start, item["duration"], clip_path)
+    await extract_clip(
+      job_id, source_file, extract_start, item["duration"], clip_path,
+      display_start_time=start_time,
+    )
 
     if not os.path.exists(clip_path) or os.path.getsize(clip_path) < 1000:
       raise RuntimeError(
